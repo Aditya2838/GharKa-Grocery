@@ -141,14 +141,17 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     <div class="month">▦ &nbsp; November 2026</div>
   </section>
   <section class="stats">
-    <div class="stat"><div class="stat-label">TOTAL ITEMS</div><div class="stat-value" id="total">8</div><div class="stat-note">On this month's list</div></div>
-    <div class="stat"><div class="stat-label">PURCHASED</div><div class="stat-value" id="purchased">3</div><div class="stat-note">Items checked off</div></div>
-    <div class="stat"><div class="stat-label">STILL TO BUY</div><div class="stat-value" id="remaining">5</div><div class="stat-note">Pending items</div></div>
-    <div class="stat"><div class="stat-label">SPENT SO FAR</div><div class="stat-value" id="spent">₹2,450</div><div class="stat-note">Based on entered prices</div></div>
+    <div class="stat"><div class="stat-label">TOTAL ITEMS</div><div class="stat-value" id="total">0</div><div class="stat-note">On this month's list</div></div>
+    <div class="stat"><div class="stat-label">PURCHASED</div><div class="stat-value" id="purchased">0</div><div class="stat-note">Items checked off</div></div>
+    <div class="stat"><div class="stat-label">STILL TO BUY</div><div class="stat-value" id="remaining">0</div><div class="stat-note">Pending items</div></div>
+    <div class="stat"><div class="stat-label">SPENT SO FAR</div><div class="stat-value" id="spent">₹0</div><div class="stat-note">Based on entered prices</div></div>
   </section>
   <main class="layout">
     <section class="panel">
-      <div class="panel-head"><div><h2>Monthly grocery list</h2><div class="sub" id="list-sub">Manage what the family needs</div></div><button class="btn primary" id="add-btn" onclick="openAdd()">＋ Add item</button></div>
+      <div class="panel-head"><div><h2>Monthly grocery list</h2><div class="sub" id="list-sub">Manage what the family needs</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+<button class="btn primary" id="add-btn" onclick="openAdd()">＋ Add item</button>
+<button class="btn secondary hidden" id="send-btn" onclick="sendToDad()">↗ Send to Dad <span id="draft-count"></span></button>
+</div></div>
       <div class="filters">
         <button class="filter active" data-filter="all" onclick="setFilter('all',this)">All items</button>
         <button class="filter" data-filter="pending" onclick="setFilter('pending',this)">To buy</button>
@@ -162,7 +165,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
         <div class="progress"><span id="budget-bar"></span></div><div class="budget-foot"><span id="budget-percent">25% used</span><span id="budget-left">₹7,550 left</span></div>
       </section>
       <section class="panel"><div class="panel-head"><div><h2>Recent activity</h2><div class="sub">Latest shopping updates</div></div><span>↗</span></div><div id="activity"></div></section>
-      <div class="tip"><b>Quick tip</b><br>Mom can add items to the list anytime. Dad can tick them off while shopping and enter the actual price.</div>
+      <div class="tip"><b>How it works</b><br>Mom adds groceries as drafts. When ready, tap <b>Send to Dad</b>. Dad then sees only the items that were sent and can mark them purchased.</div>
     </aside>
   </main>
   <div class="mobile-note">GharKa Grocery · A simple family shopping companion</div>
@@ -190,26 +193,54 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 </div>
 <div class="overlay hidden" id="price-modal"><div class="modal"><h2>Mark as purchased</h2><p>Enter the amount paid for this item.</p><div class="field"><label>Actual price (₹)</label><input id="f-price" type="number" min="0" placeholder="e.g. 180"></div><div class="modal-actions"><button class="btn ghost" onclick="closePrice()">Cancel</button><button class="btn primary" onclick="confirmPurchase()">Confirm purchase</button></div></div></div>
 <script>
-const starter=[
-{id:1,name:"Rice",qty:"25 kg",category:"Grains & staples",priority:"Essential",bought:true,price:1450},
-{id:2,name:"Toor dal",qty:"3 kg",category:"Pulses",priority:"Essential",bought:true,price:390},
-{id:3,name:"Sunflower oil",qty:"5 L",category:"Oil & spices",priority:"Essential",bought:true,price:610},
-{id:4,name:"Sugar",qty:"2 kg",category:"Grains & staples",priority:"Optional",bought:false,price:0},
-{id:5,name:"Wheat flour",qty:"5 kg",category:"Grains & staples",priority:"Essential",bought:false,price:0},
-{id:6,name:"Bath soap",qty:"4 packs",category:"Personal care",priority:"Essential",bought:false,price:0},
-{id:7,name:"Detergent",qty:"2 packs",category:"Cleaning",priority:"Essential",bought:false,price:0},
-{id:8,name:"Turmeric powder",qty:"250 g",category:"Oil & spices",priority:"Optional",bought:false,price:0}
-];
-let data=JSON.parse(localStorage.getItem("gharka-items")||"null")||starter;
+
+// Fresh-start data model: no sample groceries or pre-marked purchases.
+let data=JSON.parse(localStorage.getItem("gharka-items-v3")||"[]");
 let role="Mom",filter="all",editing=null,pendingId=null;
-let activities=JSON.parse(localStorage.getItem("gharka-activity")||"null")||[{text:"Dad purchased Rice, Toor dal and Oil",time:"Today · 10:42 AM"},{text:"Mom created November's grocery list",time:"Yesterday"}];
-function persist(){localStorage.setItem("gharka-items",JSON.stringify(data));localStorage.setItem("gharka-activity",JSON.stringify(activities))}
+let activities=JSON.parse(localStorage.getItem("gharka-activity-v3")||"[]");
+function persist(){localStorage.setItem("gharka-items-v3",JSON.stringify(data));localStorage.setItem("gharka-activity-v3",JSON.stringify(activities))}
+function visibleItems(){return role==="Dad"?data.filter(x=>x.sentToDad):data}
+function unsentCount(){return data.filter(x=>!x.sentToDad).length}
+function sendToDad(){
+ const count=unsentCount();
+ if(!count){alert("There are no new items to send.");return}
+ data.forEach(x=>{if(!x.sentToDad)x.sentToDad=true});
+ log(`Mom sent ${count} grocery ${count===1?"item":"items"} to Dad`);
+ persist();render();
+ alert(`${count} ${count===1?"item":"items"} sent to Dad's shopping list on this browser.`);
+}
 function enter(r){role=r;document.getElementById("role-modal").classList.add("hidden");render()}
 function switchRole(){document.getElementById("role-modal").classList.remove("hidden")}
 function setFilter(f,el){filter=f;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderItems()}
-function render(){document.getElementById("welcome").textContent=`Good evening, ${role} ${role==="Mom"?"👋":"👋"}`;document.getElementById("subtitle").textContent=role==="Mom"?"Plan this month's essentials. Dad will see your list instantly on this device.":"Your shopping list is ready. Tick off each item as you buy it.";document.getElementById("avatar").textContent=role[0];document.getElementById("add-btn").classList.toggle("hidden",role!=="Mom");document.getElementById("list-sub").textContent=role==="Mom"?"Manage what the family needs":"Tap an item when you have purchased it";renderItems();renderStats();renderActivity()}
-function renderItems(){let list=data.filter(x=>filter==="all"||(filter==="bought"?x.bought:!x.bought));let el=document.getElementById("items");if(!list.length){el.innerHTML='<div class="empty">Nothing here yet. Your list is looking clear!</div>';return}el.innerHTML=list.map(x=>`<div class="item ${x.bought?"done":""}"><button class="check" aria-label="Toggle purchased" onclick="${role==="Dad"?`togglePurchase(${x.id})`:"return false"}">${x.bought?"✓":""}</button><div class="item-main"><div class="item-name">${esc(x.name)}</div><div class="item-meta">${esc(x.category)} · ${x.priority}</div></div><span class="qty">${esc(x.qty)}</span><span class="status ${x.bought?"bought":"pending"}">${x.bought?"Purchased":"To buy"}</span>${role==="Mom"?`<div class="item-actions"><button class="iconbtn" title="Edit" onclick="editItem(${x.id})">✎</button><button class="iconbtn" title="Delete" onclick="deleteItem(${x.id})">×</button></div>`:x.bought?`<span class="qty">₹${x.price||0}</span>`:""}</div>`).join("")}
-function renderStats(){let bought=data.filter(x=>x.bought),spent=bought.reduce((s,x)=>s+(+x.price||0),0),left=data.length-bought.length;document.getElementById("total").textContent=data.length;document.getElementById("purchased").textContent=bought.length;document.getElementById("remaining").textContent=left;document.getElementById("spent").textContent=money(spent);document.getElementById("budget-spent").textContent=money(spent);let pct=Math.min(100,Math.round(spent/10000*100));document.getElementById("budget-bar").style.width=pct+"%";document.getElementById("budget-percent").textContent=pct+"% used";document.getElementById("budget-left").textContent=money(Math.max(0,10000-spent))+" left"}
+function render(){
+ document.getElementById("welcome").textContent=`Good evening, ${role} 👋`;
+ document.getElementById("subtitle").textContent=role==="Mom"?"Add the groceries you need, then send the list to Dad when it's ready.":"These are the groceries Mom has sent you. Tick each item as you buy it.";
+ document.getElementById("avatar").textContent=role[0];
+ document.getElementById("add-btn").classList.toggle("hidden",role!=="Mom");
+ document.getElementById("send-btn").classList.toggle("hidden",role!=="Mom"||unsentCount()===0);
+ document.getElementById("draft-count").textContent=unsentCount()?`(${unsentCount()})`:"";
+ document.getElementById("list-sub").textContent=role==="Mom"?"Your list — send new items to Dad when ready":"Shopping list shared by Mom";
+ renderItems();renderStats();renderActivity()
+}
+function renderItems(){
+ let source=visibleItems();
+ let list=source.filter(x=>filter==="all"||(filter==="bought"?x.bought:!x.bought));
+ let el=document.getElementById("items");
+ if(!list.length){
+   el.innerHTML=role==="Dad"
+    ?'<div class="empty">No groceries have been sent yet.<br>Mom can add items and tap <b>Send to Dad</b> when the list is ready.</div>'
+    :'<div class="empty">Your grocery list is empty.<br>Tap <b>＋ Add item</b> to get started.</div>';
+   return
+ }
+ el.innerHTML=list.map(x=>`<div class="item ${x.bought?"done":""}">
+ <button class="check" aria-label="Toggle purchased" onclick="${role==="Dad"?`togglePurchase(${x.id})`:"return false"}">${x.bought?"✓":""}</button>
+ <div class="item-main"><div class="item-name">${esc(x.name)}</div><div class="item-meta">${esc(x.category)} · ${x.priority}${role==="Mom"&&!x.sentToDad?' · <b style="color:#a76a14">Not sent yet</b>':""}</div></div>
+ <span class="qty">${esc(x.qty)}</span>
+ <span class="status ${x.bought?"bought":x.sentToDad?"pending":"pending"}">${x.bought?"Purchased":x.sentToDad?"To buy":"Draft"}</span>
+ ${role==="Mom"?`<div class="item-actions"><button class="iconbtn" title="Edit" onclick="editItem(${x.id})">✎</button><button class="iconbtn" title="Delete" onclick="deleteItem(${x.id})">×</button></div>`:x.bought?`<span class="qty">₹${x.price||0}</span>`:""}
+ </div>`).join("")
+}
+function renderStats(){let source=visibleItems(),bought=source.filter(x=>x.bought),spent=bought.reduce((s,x)=>s+(+x.price||0),0),left=source.length-bought.length;document.getElementById("total").textContent=source.length;document.getElementById("purchased").textContent=bought.length;document.getElementById("remaining").textContent=left;document.getElementById("spent").textContent=money(spent);document.getElementById("budget-spent").textContent=money(spent);let pct=Math.min(100,Math.round(spent/10000*100));document.getElementById("budget-bar").style.width=pct+"%";document.getElementById("budget-percent").textContent=pct+"% used";document.getElementById("budget-left").textContent=money(Math.max(0,10000-spent))+" left"}
 function renderActivity(){document.getElementById("activity").innerHTML=activities.slice(0,5).map(a=>`<div class="activity"><span class="dot"></span><div><strong>${esc(a.text)}</strong><small>${esc(a.time)}</small></div></div>`).join("")}
 
 const catalog=[
@@ -235,9 +266,9 @@ function pickCatalog(i){const x=catalog[i];document.getElementById("f-name").val
 
 function openAdd(){editing=null;catalogCategory="All";document.getElementById("modal-title").textContent="Add grocery";["f-name","f-qty","catalog-search"].forEach(id=>document.getElementById(id).value="");renderCatalog();document.getElementById("item-modal").classList.remove("hidden")}
 function editItem(id){let x=data.find(a=>a.id===id);editing=id;catalogCategory="All";document.getElementById("catalog-search").value="";renderCatalog();document.getElementById("modal-title").textContent="Edit grocery";document.getElementById("f-name").value=x.name;document.getElementById("f-qty").value=x.qty;document.getElementById("f-category").value=x.category;document.getElementById("f-priority").value=x.priority;document.getElementById("item-modal").classList.remove("hidden")}
-function saveItem(){let name=document.getElementById("f-name").value.trim(),qty=document.getElementById("f-qty").value.trim();if(!name||!qty){alert("Please enter a grocery name and quantity.");return}let item={name,qty,category:document.getElementById("f-category").value,priority:document.getElementById("f-priority").value};if(editing){Object.assign(data.find(x=>x.id===editing),item);log(`Mom updated ${name}`)}else{data.unshift({id:Date.now(),...item,bought:false,price:0});log(`Mom added ${name} to the list`)}persist();closeModal();render()}
+function saveItem(){let name=document.getElementById("f-name").value.trim(),qty=document.getElementById("f-qty").value.trim();if(!name||!qty){alert("Please enter a grocery name and quantity.");return}let item={name,qty,category:document.getElementById("f-category").value,priority:document.getElementById("f-priority").value};if(editing){Object.assign(data.find(x=>x.id===editing),item);log(`Mom updated ${name}`)}else{data.unshift({id:Date.now(),...item,bought:false,price:0,sentToDad:false});log(`Mom added ${name} to her draft list`)}persist();closeModal();render()}
 function deleteItem(id){let x=data.find(a=>a.id===id);if(confirm(`Remove ${x.name} from the list?`)){data=data.filter(a=>a.id!==id);log(`Mom removed ${x.name}`);persist();render()}}
-function togglePurchase(id){pendingId=id;document.getElementById("f-price").value="";document.getElementById("price-modal").classList.remove("hidden")}
+function togglePurchase(id){let item=data.find(a=>a.id===id);if(!item||!item.sentToDad)return;pendingId=id;document.getElementById("f-price").value="";document.getElementById("price-modal").classList.remove("hidden")}
 function confirmPurchase(){let x=data.find(a=>a.id===pendingId),price=Number(document.getElementById("f-price").value);if(!Number.isFinite(price)||price<0){alert("Enter a valid price.");return}x.bought=true;x.price=price;log(`Dad purchased ${x.name} for ${money(price)}`);persist();closePrice();render()}
 function closeModal(){document.getElementById("item-modal").classList.add("hidden")}function closePrice(){document.getElementById("price-modal").classList.add("hidden")}
 function log(text){activities.unshift({text,time:"Just now"});activities=activities.slice(0,10)}
