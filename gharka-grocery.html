@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GharKa — Family Grocery Manager</title>
+<style>
+:root{--green:#237a57;--green2:#e8f4ed;--ink:#17231d;--muted:#718078;--line:#e7ece8;--bg:#f5f8f5;--white:#fff;--orange:#fff3df;--red:#fff0ed;--shadow:0 12px 35px rgba(26,55,39,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1120px;margin:auto;padding:24px}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:21px;letter-spacing:-.5px}.logo{width:40px;height:40px;border-radius:13px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:21px}.top-right{display:flex;align-items:center;gap:10px}.pill{background:var(--green2);color:var(--green);font-size:12px;font-weight:700;padding:7px 11px;border-radius:30px}.avatar{width:36px;height:36px;border-radius:50%;background:#e6eee8;display:grid;place-items:center;font-weight:800;color:var(--green)}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin:10px 0 22px}.eyebrow{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);font-weight:800}.hero h1{font-size:clamp(27px,4vw,38px);letter-spacing:-1.4px;margin:7px 0}.hero p{color:var(--muted);margin:0}.month{border:1px solid var(--line);background:#fff;padding:10px 13px;border-radius:12px;color:#44534a;font-weight:650}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.stat,.panel{background:var(--white);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.stat{padding:17px 18px}.stat-label{font-size:12px;color:var(--muted);font-weight:650}.stat-value{font-size:26px;font-weight:800;letter-spacing:-.7px;margin-top:7px}.stat-note{font-size:11px;color:var(--muted);margin-top:3px}.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,.8fr);gap:18px}.panel{padding:20px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}.panel h2{font-size:17px;margin:0;letter-spacing:-.3px}.sub{font-size:12px;color:var(--muted);margin-top:5px}.btn{border:0;border-radius:11px;padding:10px 14px;font-weight:750;font-size:13px}.primary{background:var(--green);color:white}.secondary{background:var(--green2);color:var(--green)}.ghost{background:#f2f5f2;color:#536159}.danger{background:var(--red);color:#b64b3c}.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.filter{border:1px solid var(--line);background:#fff;color:#66736b;border-radius:30px;padding:7px 12px;font-size:12px;font-weight:700}.filter.active{background:var(--green2);border-color:#cde4d4;color:var(--green)}.items{display:flex;flex-direction:column;gap:9px}.item{border:1px solid var(--line);border-radius:13px;padding:12px;display:flex;align-items:center;gap:12px}.item.done{background:#fbfdfb}.check{width:21px;height:21px;border:1.7px solid #c5d0c8;border-radius:7px;display:grid;place-items:center;flex:none;color:white;background:white}.done .check{background:var(--green);border-color:var(--green)}.item-main{min-width:0;flex:1}.item-name{font-size:14px;font-weight:750}.done .item-name{text-decoration:line-through;color:#87948c}.item-meta{font-size:11px;color:var(--muted);margin-top:4px}.qty{font-size:12px;font-weight:750;background:#f3f6f3;padding:6px 9px;border-radius:8px;white-space:nowrap}.status{font-size:10px;font-weight:800;padding:6px 8px;border-radius:20px;white-space:nowrap}.pending{background:var(--orange);color:#a76a14}.bought{background:var(--green2);color:var(--green)}.item-actions{display:flex;gap:5px}.iconbtn{border:0;background:transparent;color:#859188;padding:5px;font-size:16px}.side-stack{display:flex;flex-direction:column;gap:15px}.budget{background:linear-gradient(135deg,#1d694a,#2d8c63);color:white;border:0}.budget .stat-label,.budget .sub{color:#d4eadc}.budget .stat-value{font-size:29px}.progress{height:8px;background:#ffffff40;border-radius:20px;overflow:hidden;margin:15px 0 8px}.progress span{height:100%;display:block;background:#fff;border-radius:20px;width:62%}.budget-foot{display:flex;justify-content:space-between;font-size:11px;color:#e1f1e6}.activity{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.activity:last-child{border:0}.dot{width:8px;height:8px;border-radius:50%;background:#3c9a6b;margin-top:5px;flex:none}.activity strong{font-size:12px}.activity small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.tip{padding:14px;border-radius:13px;background:#f4f8f4;font-size:12px;color:#5d6c62;line-height:1.5}.tip b{color:var(--green)}.rolebar{display:flex;gap:8px}.rolebar button{background:#f2f5f2;color:#65736a}.rolebar button.active{background:var(--green);color:#fff}.overlay{position:fixed;inset:0;background:#14231bcc;display:grid;place-items:center;padding:18px;z-index:5}.modal{background:#fff;border-radius:20px;padding:24px;width:min(440px,100%);box-shadow:0 25px 70px #0003}.modal h2{margin:0 0 7px;font-size:22px}.modal p{color:var(--muted);font-size:13px;margin:0 0 18px}.field{display:flex;flex-direction:column;gap:6px;margin:12px 0}.field label{font-size:12px;font-weight:750;color:#536159}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none;background:white}.field input:focus,.field select:focus{border-color:var(--green)}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:13px}.hidden{display:none!important}.mobile-note{font-size:11px;color:var(--muted);text-align:center;margin-top:20px}
+.catalog-categories{display:flex;gap:7px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:thin}
+.cat-chip{border:1px solid var(--line);background:#fff;color:#627168;border-radius:30px;padding:7px 11px;font-size:11px;font-weight:750;white-space:nowrap}
+.cat-chip.active{background:var(--green2);border-color:#cde4d4;color:var(--green)}
+.catalog-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;max-height:190px;overflow:auto;margin:0 0 12px}
+.catalog-product{border:1px solid var(--line);border-radius:10px;background:#fff;padding:9px 10px;text-align:left;display:flex;align-items:center;gap:8px;color:var(--ink);font-size:12px;font-weight:700}
+.catalog-product:hover{border-color:#8dbda0;background:#f7fbf8}
+.catalog-product span:first-child{font-size:17px}
+.catalog-product small{display:block;color:var(--muted);font-weight:500;margin-top:2px}
+.catalog-empty{grid-column:1/-1;color:var(--muted);font-size:12px;padding:10px}
+
+@media(max-width:760px){.app{padding:16px}.stats{grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:14px}.stat-value{font-size:22px}.layout{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.panel{padding:16px}.item{gap:8px;padding:10px}.status{display:none}.qty{font-size:11px}.topbar{margin-bottom:20px}}
+
+/* Parent-friendly responsive design upgrade */
+:root{
+ --green:#176b4a;--green2:#e6f3eb;--ink:#17251d;--muted:#637168;
+ --bg:#f3f7f3;--line:#dfe8e1;--shadow:0 8px 26px rgba(25,65,42,.06)
+}
+body{font-size:16px;line-height:1.45;background:var(--bg)}
+.app{max-width:1180px;padding:clamp(14px,3vw,30px)}
+.brand{font-size:22px}
+.logo{width:46px;height:46px;border-radius:15px;font-size:24px}
+.topbar{margin-bottom:30px}
+.hero{margin:12px 0 25px}
+.hero h1{font-size:clamp(29px,4vw,42px);line-height:1.12;letter-spacing:-1px}
+.hero p{font-size:15px;line-height:1.55;max-width:650px}
+.month{font-size:14px;padding:12px 15px}
+.stats{gap:15px}
+.stat{padding:20px;border-radius:18px}
+.stat-label{font-size:13px;letter-spacing:.25px}
+.stat-value{font-size:29px}
+.stat-note{font-size:12px}
+.panel{padding:22px;border-radius:20px}
+.panel h2{font-size:19px}
+.sub{font-size:13px;line-height:1.5}
+.btn{min-height:46px;padding:12px 17px;font-size:14px;border-radius:12px}
+.filter{min-height:42px;padding:9px 15px;font-size:13px}
+.item{padding:14px;gap:13px;border-radius:15px;min-height:72px}
+.check{width:27px;height:27px;border-radius:8px;font-size:17px}
+.item-name{font-size:16px}
+.item-meta{font-size:12px}
+.qty{font-size:13px;padding:8px 11px}
+.status{font-size:11px;padding:7px 10px}
+.iconbtn{font-size:21px;min-width:36px;min-height:36px}
+.budget .stat-value{font-size:32px}
+.activity strong{font-size:13px}
+.activity small{font-size:12px}
+.tip{font-size:13px;padding:16px;border-radius:15px}
+.field label{font-size:14px}
+.field input,.field select{font-size:16px;min-height:48px;padding:12px 13px}
+.modal{max-height:90vh;overflow-y:auto;padding:25px;border-radius:22px}
+.modal h2{font-size:24px}
+.modal p{font-size:14px;line-height:1.5}
+.catalog-categories{padding:5px 0 10px}
+.cat-chip{min-height:40px;padding:9px 14px;font-size:12px}
+.catalog-results{max-height:240px;gap:9px}
+.catalog-product{min-height:58px;padding:11px;font-size:13px;border-radius:12px}
+.mobile-note{font-size:12px;padding-bottom:8px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #82b99a;outline-offset:2px}
+@media(max-width:760px){
+ .app{padding:14px 12px 24px}
+ .topbar{align-items:center;margin-bottom:22px;gap:8px}
+ .brand{font-size:19px;gap:8px}
+ .brand span{display:none}
+ .logo{width:42px;height:42px}
+ .top-right{gap:7px}
+ .top-right .pill{display:none}
+ .top-right .btn{font-size:12px;padding:9px 11px;min-height:40px}
+ .avatar{width:38px;height:38px}
+ .hero{gap:13px;margin:8px 2px 19px}
+ .hero h1{font-size:30px}
+ .hero p{font-size:14px}
+ .month{font-size:13px;padding:10px 12px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:13px}
+ .stat{padding:14px 13px;border-radius:15px}
+ .stat-value{font-size:24px;margin-top:5px}
+ .stat-label{font-size:11px}
+ .stat-note{font-size:11px}
+ .layout{grid-template-columns:minmax(0,1fr);gap:13px}
+ .panel{padding:16px;border-radius:17px}
+ .panel-head{align-items:center;margin-bottom:14px}
+ .panel h2{font-size:18px}
+ .panel-head .btn{padding:10px 12px;font-size:13px;white-space:nowrap}
+ .filters{gap:6px;margin-bottom:12px}
+ .filter{flex:1;padding:8px 9px;font-size:12px;min-height:42px}
+ .item{gap:9px;padding:11px 9px;min-height:68px}
+ .item-main{min-width:0}
+ .item-name{font-size:14px;overflow-wrap:anywhere}
+ .item-meta{font-size:11px}
+ .qty{font-size:11px;padding:7px 8px}
+ .status{display:none}
+ .iconbtn{min-width:30px;font-size:19px}
+ .side-stack{gap:12px}
+ .budget{padding:18px}
+ .budget .stat-value{font-size:29px}
+ .activity{padding:11px 0}
+ .overlay{padding:12px;align-items:end}
+ .modal{width:100%;max-height:88dvh;padding:20px 17px calc(20px + env(safe-area-inset-bottom))}
+ .catalog-results{grid-template-columns:repeat(2,minmax(0,1fr));max-height:190px}
+ .catalog-product{font-size:12px;min-height:58px;padding:9px}
+ .modal-actions{position:sticky;bottom:-20px;background:#fff;padding:12px 0 2px}
+ .modal-actions .btn{flex:1}
+}
+@media(max-width:380px){
+ .top-right .btn{font-size:11px;padding:8px}
+ .hero h1{font-size:27px}
+ .item{gap:7px}
+ .qty{font-size:10px;padding:6px}
+ .catalog-results{grid-template-columns:1fr}
+}
+
+
+/* Tablet layout: keep the grocery list primary, with a compact side column */
+@media (min-width:761px) and (max-width:1024px){
+  .app{padding:20px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .layout{grid-template-columns:minmax(0,1.35fr) minmax(230px,.8fr);gap:14px}
+  .panel{padding:18px}
+  .item{gap:9px}
+  .status{font-size:10px}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">⌂</div> GharKa <span style="font-weight:500;color:#819087;font-size:13px">/ groceries</span></div>
+    <div class="top-right"><span class="pill">FAMILY</span><div class="avatar" id="avatar">M</div><button class="btn ghost" onclick="switchRole()">Switch user</button></div>
+  </header>
+  <section class="hero">
+    <div><div class="eyebrow">YOUR FAMILY GROCERY LIST</div><h1 id="welcome">Good evening, Mom 👋</h1><p id="subtitle">Plan this month's essentials. Dad will see your list instantly on this device.</p></div>
+    <div class="month">▦ &nbsp; November 2026</div>
+  </section>
+  <section class="stats">
+    <div class="stat"><div class="stat-label">TOTAL ITEMS</div><div class="stat-value" id="total">8</div><div class="stat-note">On this month's list</div></div>
+    <div class="stat"><div class="stat-label">PURCHASED</div><div class="stat-value" id="purchased">3</div><div class="stat-note">Items checked off</div></div>
+    <div class="stat"><div class="stat-label">STILL TO BUY</div><div class="stat-value" id="remaining">5</div><div class="stat-note">Pending items</div></div>
+    <div class="stat"><div class="stat-label">SPENT SO FAR</div><div class="stat-value" id="spent">₹2,450</div><div class="stat-note">Based on entered prices</div></div>
+  </section>
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-head"><div><h2>Monthly grocery list</h2><div class="sub" id="list-sub">Manage what the family needs</div></div><button class="btn primary" id="add-btn" onclick="openAdd()">＋ Add item</button></div>
+      <div class="filters">
+        <button class="filter active" data-filter="all" onclick="setFilter('all',this)">All items</button>
+        <button class="filter" data-filter="pending" onclick="setFilter('pending',this)">To buy</button>
+        <button class="filter" data-filter="bought" onclick="setFilter('bought',this)">Purchased</button>
+      </div>
+      <div class="items" id="items"></div>
+    </section>
+    <aside class="side-stack">
+      <section class="panel budget">
+        <div class="stat-label">MONTHLY GROCERY BUDGET</div><div class="stat-value" id="budget">₹10,000</div><div class="sub">Spent: <b id="budget-spent">₹2,450</b></div>
+        <div class="progress"><span id="budget-bar"></span></div><div class="budget-foot"><span id="budget-percent">25% used</span><span id="budget-left">₹7,550 left</span></div>
+      </section>
+      <section class="panel"><div class="panel-head"><div><h2>Recent activity</h2><div class="sub">Latest shopping updates</div></div><span>↗</span></div><div id="activity"></div></section>
+      <div class="tip"><b>Quick tip</b><br>Mom can add items to the list anytime. Dad can tick them off while shopping and enter the actual price.</div>
+    </aside>
+  </main>
+  <div class="mobile-note">GharKa Grocery · A simple family shopping companion</div>
+</div>
+<div class="overlay" id="role-modal">
+  <div class="modal">
+    <div class="brand" style="margin-bottom:22px"><div class="logo">⌂</div> GharKa</div>
+    <div class="eyebrow">FAMILY GROCERY MANAGER</div><h2>Welcome to GharKa</h2><p>Choose who is using the grocery list.</p>
+    <button class="btn secondary" style="width:100%;padding:14px;margin:5px 0;text-align:left" onclick="enter('Mom')">👩 &nbsp; Mom – Manage the list <span style="float:right">→</span></button>
+    <button class="btn secondary" style="width:100%;padding:14px;margin:5px 0;text-align:left" onclick="enter('Dad')">👨 &nbsp; Dad – Shopping list <span style="float:right">→</span></button>
+    <div class="sub" style="margin-top:16px">Simple demo login · No password needed</div>
+  </div>
+</div>
+<div class="overlay hidden" id="item-modal">
+  <div class="modal"><h2 id="modal-title">Add grocery</h2><p>Add an item to this month's shopping list.</p>
+    <div class="field"><label>Find a grocery</label><input id="catalog-search" placeholder="Search rice, dal, oil, soap..." oninput="renderCatalog()"></div>
+    <div class="catalog-categories" id="catalog-categories"></div>
+    <div class="catalog-results" id="catalog-results"></div>
+    <div class="field"><label>Grocery name</label><input id="f-name" placeholder="Choose above or type a custom item"></div>
+    <div class="field"><label>Category</label><select id="f-category"><option>Grains & staples</option><option>Oil & spices</option><option>Pulses</option><option>Dairy</option><option>Vegetables</option><option>Cleaning</option><option>Personal care</option><option>Other</option></select></div>
+    <div class="field"><label>Quantity</label><input id="f-qty" placeholder="e.g. 2 kg"></div>
+    <div class="field"><label>Priority</label><select id="f-priority"><option>Essential</option><option>Optional</option></select></div>
+    <div class="modal-actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveItem()">Save item</button></div>
+  </div>
+</div>
+<div class="overlay hidden" id="price-modal"><div class="modal"><h2>Mark as purchased</h2><p>Enter the amount paid for this item.</p><div class="field"><label>Actual price (₹)</label><input id="f-price" type="number" min="0" placeholder="e.g. 180"></div><div class="modal-actions"><button class="btn ghost" onclick="closePrice()">Cancel</button><button class="btn primary" onclick="confirmPurchase()">Confirm purchase</button></div></div></div>
+<script>
+const starter=[
+{id:1,name:"Rice",qty:"25 kg",category:"Grains & staples",priority:"Essential",bought:true,price:1450},
+{id:2,name:"Toor dal",qty:"3 kg",category:"Pulses",priority:"Essential",bought:true,price:390},
+{id:3,name:"Sunflower oil",qty:"5 L",category:"Oil & spices",priority:"Essential",bought:true,price:610},
+{id:4,name:"Sugar",qty:"2 kg",category:"Grains & staples",priority:"Optional",bought:false,price:0},
+{id:5,name:"Wheat flour",qty:"5 kg",category:"Grains & staples",priority:"Essential",bought:false,price:0},
+{id:6,name:"Bath soap",qty:"4 packs",category:"Personal care",priority:"Essential",bought:false,price:0},
+{id:7,name:"Detergent",qty:"2 packs",category:"Cleaning",priority:"Essential",bought:false,price:0},
+{id:8,name:"Turmeric powder",qty:"250 g",category:"Oil & spices",priority:"Optional",bought:false,price:0}
+];
+let data=JSON.parse(localStorage.getItem("gharka-items")||"null")||starter;
+let role="Mom",filter="all",editing=null,pendingId=null;
+let activities=JSON.parse(localStorage.getItem("gharka-activity")||"null")||[{text:"Dad purchased Rice, Toor dal and Oil",time:"Today · 10:42 AM"},{text:"Mom created November's grocery list",time:"Yesterday"}];
+function persist(){localStorage.setItem("gharka-items",JSON.stringify(data));localStorage.setItem("gharka-activity",JSON.stringify(activities))}
+function enter(r){role=r;document.getElementById("role-modal").classList.add("hidden");render()}
+function switchRole(){document.getElementById("role-modal").classList.remove("hidden")}
+function setFilter(f,el){filter=f;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderItems()}
+function render(){document.getElementById("welcome").textContent=`Good evening, ${role} ${role==="Mom"?"👋":"👋"}`;document.getElementById("subtitle").textContent=role==="Mom"?"Plan this month's essentials. Dad will see your list instantly on this device.":"Your shopping list is ready. Tick off each item as you buy it.";document.getElementById("avatar").textContent=role[0];document.getElementById("add-btn").classList.toggle("hidden",role!=="Mom");document.getElementById("list-sub").textContent=role==="Mom"?"Manage what the family needs":"Tap an item when you have purchased it";renderItems();renderStats();renderActivity()}
+function renderItems(){let list=data.filter(x=>filter==="all"||(filter==="bought"?x.bought:!x.bought));let el=document.getElementById("items");if(!list.length){el.innerHTML='<div class="empty">Nothing here yet. Your list is looking clear!</div>';return}el.innerHTML=list.map(x=>`<div class="item ${x.bought?"done":""}"><button class="check" aria-label="Toggle purchased" onclick="${role==="Dad"?`togglePurchase(${x.id})`:"return false"}">${x.bought?"✓":""}</button><div class="item-main"><div class="item-name">${esc(x.name)}</div><div class="item-meta">${esc(x.category)} · ${x.priority}</div></div><span class="qty">${esc(x.qty)}</span><span class="status ${x.bought?"bought":"pending"}">${x.bought?"Purchased":"To buy"}</span>${role==="Mom"?`<div class="item-actions"><button class="iconbtn" title="Edit" onclick="editItem(${x.id})">✎</button><button class="iconbtn" title="Delete" onclick="deleteItem(${x.id})">×</button></div>`:x.bought?`<span class="qty">₹${x.price||0}</span>`:""}</div>`).join("")}
+function renderStats(){let bought=data.filter(x=>x.bought),spent=bought.reduce((s,x)=>s+(+x.price||0),0),left=data.length-bought.length;document.getElementById("total").textContent=data.length;document.getElementById("purchased").textContent=bought.length;document.getElementById("remaining").textContent=left;document.getElementById("spent").textContent=money(spent);document.getElementById("budget-spent").textContent=money(spent);let pct=Math.min(100,Math.round(spent/10000*100));document.getElementById("budget-bar").style.width=pct+"%";document.getElementById("budget-percent").textContent=pct+"% used";document.getElementById("budget-left").textContent=money(Math.max(0,10000-spent))+" left"}
+function renderActivity(){document.getElementById("activity").innerHTML=activities.slice(0,5).map(a=>`<div class="activity"><span class="dot"></span><div><strong>${esc(a.text)}</strong><small>${esc(a.time)}</small></div></div>`).join("")}
+
+const catalog=[
+["Rice","Grains & staples","🌾","kg"],["Basmati rice","Grains & staples","🍚","kg"],["Wheat flour / Atta","Grains & staples","🌾","kg"],["Rava / Sooji","Grains & staples","🥣","kg"],["Maida","Grains & staples","🌾","kg"],["Poha / Atukulu","Grains & staples","🥣","kg"],["Sugar","Grains & staples","🍬","kg"],["Jaggery","Grains & staples","🟤","kg"],["Salt","Grains & staples","🧂","kg"],
+["Toor dal / Kandi pappu","Pulses","🫘","kg"],["Moong dal / Pesara pappu","Pulses","🫘","kg"],["Chana dal / Senaga pappu","Pulses","🫘","kg"],["Urad dal / Minapa pappu","Pulses","🫘","kg"],["Masoor dal","Pulses","🫘","kg"],["Rajma","Pulses","🫘","kg"],["Chickpeas / Senagalu","Pulses","🫘","kg"],
+["Sunflower oil","Oil & spices","🫗","L"],["Groundnut oil","Oil & spices","🫗","L"],["Ghee","Oil & spices","🧈","L"],["Turmeric powder","Oil & spices","🟡","g"],["Chilli powder","Oil & spices","🌶️","g"],["Coriander powder","Oil & spices","🌿","g"],["Cumin / Jeera","Oil & spices","🌿","g"],["Mustard seeds","Oil & spices","🌱","g"],["Garam masala","Oil & spices","🫙","g"],["Tamarind","Oil & spices","🟤","kg"],
+["Milk","Dairy","🥛","L"],["Curd","Dairy","🥣","kg"],["Paneer","Dairy","🧀","g"],["Butter","Dairy","🧈","pack"],
+["Onions","Vegetables","🧅","kg"],["Potatoes","Vegetables","🥔","kg"],["Tomatoes","Vegetables","🍅","kg"],["Green chillies","Vegetables","🌶️","g"],["Ginger","Vegetables","🫚","g"],["Garlic","Vegetables","🧄","g"],["Carrots","Vegetables","🥕","kg"],
+["Dishwash liquid","Cleaning","🧽","bottle"],["Detergent powder","Cleaning","🫧","kg"],["Floor cleaner","Cleaning","🧹","bottle"],["Toilet cleaner","Cleaning","🧴","bottle"],["Scrub pads","Cleaning","🧽","pack"],
+["Bath soap","Personal care","🧼","pack"],["Shampoo","Personal care","🧴","bottle"],["Toothpaste","Personal care","🪥","pack"],["Toothbrush","Personal care","🪥","piece"],["Hair oil","Personal care","🧴","bottle"],
+["Biscuits","Other","🍪","pack"],["Tea powder","Other","🍵","pack"],["Coffee powder","Other","☕","pack"],["Papad","Other","🥠","pack"],["Pickle","Other","🫙","jar"]
+];
+let catalogCategory="All";
+function renderCatalog(){
+ const q=(document.getElementById("catalog-search").value||"").trim().toLowerCase();
+ const cats=["All","Grains & staples","Pulses","Oil & spices","Dairy","Vegetables","Cleaning","Personal care","Other"];
+ document.getElementById("catalog-categories").innerHTML=cats.map(c=>`<button class="cat-chip ${catalogCategory===c?"active":""}" onclick="chooseCatalogCategory('${c.replace(/'/g,"\\'")}')">${c}</button>`).join("");
+ const matches=catalog.filter(x=>(catalogCategory==="All"||x[1]===catalogCategory)&&(!q||x[0].toLowerCase().includes(q)||x[1].toLowerCase().includes(q)));
+ document.getElementById("catalog-results").innerHTML=matches.length?matches.map((x,i)=>`<button class="catalog-product" onclick="pickCatalog(${catalog.indexOf(x)})"><span>${x[2]}</span><span>${x[0]}<small>${x[1]}</small></span></button>`).join(""):'<div class="catalog-empty">No matches. You can type a custom grocery name below.</div>';
+}
+function chooseCatalogCategory(c){catalogCategory=c;renderCatalog()}
+function pickCatalog(i){const x=catalog[i];document.getElementById("f-name").value=x[0];document.getElementById("f-category").value=x[1];document.getElementById("f-qty").value="1 "+x[3];}
+
+function openAdd(){editing=null;catalogCategory="All";document.getElementById("modal-title").textContent="Add grocery";["f-name","f-qty","catalog-search"].forEach(id=>document.getElementById(id).value="");renderCatalog();document.getElementById("item-modal").classList.remove("hidden")}
+function editItem(id){let x=data.find(a=>a.id===id);editing=id;catalogCategory="All";document.getElementById("catalog-search").value="";renderCatalog();document.getElementById("modal-title").textContent="Edit grocery";document.getElementById("f-name").value=x.name;document.getElementById("f-qty").value=x.qty;document.getElementById("f-category").value=x.category;document.getElementById("f-priority").value=x.priority;document.getElementById("item-modal").classList.remove("hidden")}
+function saveItem(){let name=document.getElementById("f-name").value.trim(),qty=document.getElementById("f-qty").value.trim();if(!name||!qty){alert("Please enter a grocery name and quantity.");return}let item={name,qty,category:document.getElementById("f-category").value,priority:document.getElementById("f-priority").value};if(editing){Object.assign(data.find(x=>x.id===editing),item);log(`Mom updated ${name}`)}else{data.unshift({id:Date.now(),...item,bought:false,price:0});log(`Mom added ${name} to the list`)}persist();closeModal();render()}
+function deleteItem(id){let x=data.find(a=>a.id===id);if(confirm(`Remove ${x.name} from the list?`)){data=data.filter(a=>a.id!==id);log(`Mom removed ${x.name}`);persist();render()}}
+function togglePurchase(id){pendingId=id;document.getElementById("f-price").value="";document.getElementById("price-modal").classList.remove("hidden")}
+function confirmPurchase(){let x=data.find(a=>a.id===pendingId),price=Number(document.getElementById("f-price").value);if(!Number.isFinite(price)||price<0){alert("Enter a valid price.");return}x.bought=true;x.price=price;log(`Dad purchased ${x.name} for ${money(price)}`);persist();closePrice();render()}
+function closeModal(){document.getElementById("item-modal").classList.add("hidden")}function closePrice(){document.getElementById("price-modal").classList.add("hidden")}
+function log(text){activities.unshift({text,time:"Just now"});activities=activities.slice(0,10)}
+function money(n){return "₹"+Number(n).toLocaleString("en-IN")}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+render();switchRole();
+</script>
+</body>
+</html>
